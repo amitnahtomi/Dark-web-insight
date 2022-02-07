@@ -1,6 +1,7 @@
 const { SocksProxyAgent } = require('socks-proxy-agent')
 const axios = require('axios')
 const cheerio = require('cheerio')
+const Paste = require('./pasteModule.js')
 const agent = new SocksProxyAgent("socks://localhost:9050")
 
 async function request(baseUrl) {
@@ -19,23 +20,35 @@ async function request(baseUrl) {
     }
 }
 
-//setInterval(() => {
-    const result = request("http://strongerw2ise74v3duebgsvug4mehyhlpa7f6kfwnas7zofs3kov7yd.onion/all")
-result.then((res)=>{
-    const $ = cheerio.load(res);
-    const pastes = $('.col-sm-12')
-    /*for(let i = 0; i < pastes.length; i++) {
-        
-    }*/
-})
-//}, 120000);
+async function savePastes() {
+    setInterval(() => {
+        const result = request("http://strongerw2ise74v3duebgsvug4mehyhlpa7f6kfwnas7zofs3kov7yd.onion/all")
+        result.then(async (res)=>{
+        const $ = cheerio.load(res);
+        const pastes = $('.col-sm-12').toArray()
+        try {
+            for(let i = 1; i < pastes.length - 1; i++) {
+                if(await Paste.exists(getPasteData(pastes[i])) === null) {
+                   await Paste.insertMany([getPasteData(pastes[i])])
+                }    
+            }
+        }
+        catch(err) {
+            console.log(err);
+        }
+    })
+    }, 120000);
+}
 
-function getPasteDet(paste) {
+module.exports = {savePastes} 
+
+
+function getPasteData(paste) {
     const pasteObj = {
         title: getTitle(paste),
         content: getContent(paste),
         author: getAuthor(paste),
-        date: getDate(paste)
+        date: new Date(getDate(paste)).toLocaleString()
     }
     return pasteObj
 }
