@@ -48,7 +48,7 @@ function getPasteData(paste) {
         title: getTitle(paste),
         content: getContent(paste),
         author: getAuthor(paste),
-        date: new Date(getDate(paste)).toLocaleString()
+        date: new Date(getDate(paste))
     }
     return pasteObj
 }
@@ -61,7 +61,7 @@ function getTitle(paste) {
 
 function getContent(paste) {
     const pasteContent = cheerio.load(paste)
-    const content = (pasteContent('.text').text()).replace(/(\r\n|\r|\t)/gm, "")
+    const content = (pasteContent('.text').text())
     return content
 }
 

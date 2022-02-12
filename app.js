@@ -17,7 +17,7 @@ mongoose
 .then(async () => {console.log("Database connected!"); await savePastes();})
 
 app.get('/', async (req, res)=>{
-    res.json(await Paste.find({}));
+    res.json(await Paste.find({}, null, {sort: {date: -1}}));
     res.end();
 })
 

@@ -1,0 +1,8 @@
+li {
+    border: 3px solid black;
+    margin-top: 10px;
+}
+
+ul {
+    list-style-type: none;
+}
