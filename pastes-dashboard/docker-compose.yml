@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  app:
+    build: 
+      context: .
+    volumes:
+      - .:/pastes-dashboard
+    ports:
+      - 3000:3000
+    image: pastes-dashboard
+    container_name: pastes-dashboard_container
+    command: npm start
