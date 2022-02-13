@@ -1,8 +1,13 @@
 li {
-    border: 3px solid black;
     margin-top: 10px;
 }
 
 ul {
     list-style-type: none;
+}
+
+.footer {
+    height: 30px;
+    position: fixed;
+    bottom: 0;
 }

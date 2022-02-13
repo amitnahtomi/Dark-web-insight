@@ -6,6 +6,7 @@ import Filter from 'bad-words';
 import Sentiment from 'sentiment'
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import {DebounceInput} from 'react-debounce-input';
+import { Button, Card, TextField } from '@mui/material';
 const filter = new Filter();
 const sentiment = new Sentiment()
 
@@ -54,39 +55,40 @@ function App() {
   
   return <Router><div><Routes>
     <Route path={'/'} element={
-      <div>
-        <button onClick={setUserAge}><Link to={'/forom'}>enter</Link></button>
-        <input ref={inputAge} type={'number'}></input>
+      <div style={{paddingTop: "15%", color: "steelblue", textAlign: "center"}}>
+        <h1>Before you enter our website, we must know your age.</h1>
+        <Button style={{marginRight: "30px", marginTop: "7px"}} size="large" variant="contained" onClick={setUserAge}><Link style={{color: "white", textDecoration: "none"}} to={'/forom'}>enter</Link></Button>
+        <TextField placeholder="Your age" style={{width: "110px"}} inputRef={inputAge} type={"number"} variant={"outlined"} required></TextField>
       </div>
     }/>
     <Route path={'/forom'} element={
-      <div>
-      {/*<input onChange={(e)=>{setSearchText(e.target.value)}} placeholder="enter text filtering"></input>*/}
-      <DebounceInput placeholder="enter text filtering" debounceTimeout={1000} onChange={(e)=>{setSearchText(e.target.value)}} />
+      <div style={{paddingBottom: '30px', textAlign: "center"}}>
+      <DebounceInput style={{height: "40px", width: "250px", fontSize: "25px", borderColor: "blue", borderRadius: "4px"}} id='filter-input' placeholder="enter text filtering" debounceTimeout={1000} onChange={(e)=>{setSearchText(e.target.value)}} />
       <ul>
         {pastes.map((p)=>{
           if(age >= 18) {
-            return <li>
+            return <li><Card variant="outlined" style={{borderColor: "violet", padding: "8px", backgroundColor: "lightgoldenrodyellow", textAlign: "left"}}>
             <div>{p.title}</div>
             <div>by {p.author}</div>
             <div>at {moment(p.date).format('LLLL')}</div>
             <div>sentiment value: {sentiment.analyze(p.content).score}</div>
-            <button onClick={viewContent}>open</button>
+            <Button size="small" variant="outlined" onClick={viewContent}>open</Button>
             <div hidden>{p.content}</div>
-            </li>
+            </Card></li>
           }
           else {
-            return <li>
+            return <li><Card variant="outlined" style={{borderColor: "violet", padding: "8px", backgroundColor: "lightgoldenrodyellow"}}>
               <div>{filter.clean(p.title)}</div>
               <div>by {p.author}</div>
               <div>at {moment(p.date).format('LLLL')}</div>
               <div>sentiment value: {sentiment.analyze(p.content).score}</div>
-              <button onClick={viewContent}>open</button>
+              <Button size="small" variant="outlined" onClick={viewContent}>open</Button>
               <div hidden>{filter.clean(p.content)}</div>
-            </li>
+              </Card></li>
           }
         })}
       </ul>
+      <div className="footer"><Button variant="contained" href="#filter-input">back to top</Button></div>
     </div>
     }/>
     
