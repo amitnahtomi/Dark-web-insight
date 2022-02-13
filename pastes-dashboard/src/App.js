@@ -6,7 +6,7 @@ import Filter from 'bad-words';
 import Sentiment from 'sentiment'
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import {DebounceInput} from 'react-debounce-input';
-import { Button, Card, TextField } from '@mui/material';
+import { Button, Card, TextField, Pagination } from '@mui/material';
 const filter = new Filter();
 const sentiment = new Sentiment()
 
@@ -14,7 +14,12 @@ function App() {
   const [pastes, setPastes] = useState([])
   const [age, setAge] = useState(0)
   const [searchText, setSearchText] = useState(false)
+  const [page, setPage] = useState(1);
   const inputAge = useRef(null)
+  
+  const changePage = (event, value) => {
+    setPage(value);
+  };
 
   const viewContent = (e) => {
     if(e.target.nextSibling.hidden === false) {
@@ -65,7 +70,7 @@ function App() {
       <div style={{paddingBottom: '30px', textAlign: "center"}}>
       <DebounceInput style={{height: "40px", width: "250px", fontSize: "25px", borderColor: "blue", borderRadius: "4px"}} id='filter-input' placeholder="enter text filtering" debounceTimeout={1000} onChange={(e)=>{setSearchText(e.target.value)}} />
       <ul>
-        {pastes.map((p)=>{
+        {pastes.slice((page-1) * 15, (page * 15 - 1)).map((p)=>{
           if(age >= 18) {
             return <li><Card variant="outlined" style={{borderColor: "violet", padding: "8px", backgroundColor: "lightgoldenrodyellow", textAlign: "left"}}>
             <div>{p.title}</div>
@@ -88,6 +93,7 @@ function App() {
           }
         })}
       </ul>
+      <Pagination page={page} count={10} showFirstButton showLastButton onChange={changePage}/>
       <div className="footer"><Button variant="contained" href="#filter-input">back to top</Button></div>
     </div>
     }/>
