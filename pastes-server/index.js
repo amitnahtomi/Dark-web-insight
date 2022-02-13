@@ -14,7 +14,6 @@ async function request(baseUrl) {
     catch (err) {
         if(axios.isAxiosError(err)) {
             console.error(err.message);
-            console.log("hello");
         }
         return "failed";
     }

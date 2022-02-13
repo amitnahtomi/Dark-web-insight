@@ -1,0 +1,18 @@
+version: '3.8'            
+
+services:
+  socks5:
+        image: dperson/torproxy
+        container_name: darknet
+        ports:
+            - 9050:9050
+  app:
+    volumes:
+           - .:/pastes-server    
+    image: pastes-server
+    build: 
+      context: .              
+    ports:                
+      - 8080:8080
+    container_name: pastes-server_container
+    command: npm start
