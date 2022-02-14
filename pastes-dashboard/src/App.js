@@ -17,10 +17,6 @@ function App() {
   const [page, setPage] = useState(1);
   const inputAge = useRef(null)
   
-  const changePage = (event, value) => {
-    setPage(value);
-  };
-
   const viewContent = (e) => {
     if(e.target.nextSibling.hidden === false) {
       e.target.nextSibling.hidden = true
@@ -93,7 +89,7 @@ function App() {
           }
         })}
       </ul>
-      <Pagination page={page} count={10} showFirstButton showLastButton onChange={changePage}/>
+      <Pagination page={page} count={10} showFirstButton showLastButton onChange={(e, v)=>{setPage(v)}}/>
       <div className="footer"><Button variant="contained" href="#filter-input">back to top</Button></div>
     </div>
     }/>

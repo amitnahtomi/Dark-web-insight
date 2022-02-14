@@ -3,9 +3,10 @@ version: '3.8'
 services:
   socks5:
         image: dperson/torproxy
+        restart: always
         container_name: darknet
         ports:
-            - 9050:9050
+            - 8118:8118
   app:
     volumes:
            - .:/pastes-server    

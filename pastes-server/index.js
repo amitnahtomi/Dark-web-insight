@@ -4,26 +4,11 @@ const cheerio = require('cheerio')
 const Paste = require('./pasteModule.js')
 const agent = new SocksProxyAgent("socks://localhost:9050")
 
-async function request(baseUrl) {
-    try {
-        const client = axios.create({baseURL: baseUrl, httpAgent: agent})
-            const res = await client.get('/')
-            return res.data    
-        
-    }
-    catch (err) {
-        if(axios.isAxiosError(err)) {
-            console.error(err.message);
-        }
-        return "failed";
-    }
-}
-
 async function savePastes() {
     setInterval(() => {
-        const result = request("http://strongerw2ise74v3duebgsvug4mehyhlpa7f6kfwnas7zofs3kov7yd.onion/all")
+        const result = axios.get("http://strongerw2ise74v3duebgsvug4mehyhlpa7f6kfwnas7zofs3kov7yd.onion/all", {proxy: {host: 'darknet', port: '8118'}})
         result.then(async (res)=>{
-        const $ = cheerio.load(res);
+        const $ = cheerio.load(res.data);
         const pastes = $('.col-sm-12').toArray()
         try {
             for(let i = 1; i < pastes.length - 1; i++) {
@@ -31,11 +16,12 @@ async function savePastes() {
                    await Paste.insertMany([getPasteData(pastes[i])])
                 }    
             }
+            console.log("hey");
         }
         catch(err) {
             console.log(err);
         }
-    })
+    }).catch((err)=>{console.log(err);})
     }, 120000);
 }
 
