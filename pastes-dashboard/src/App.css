@@ -11,3 +11,19 @@ ul {
     position: fixed;
     bottom: 0;
 }
+
+::-webkit-scrollbar {
+    width: 20px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: lightblue; 
+  }
+   
+  ::-webkit-scrollbar-thumb {
+    background: steelblue; 
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: blue; 
+  }

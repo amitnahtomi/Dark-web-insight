@@ -16,7 +16,6 @@ async function savePastes() {
                    await Paste.insertMany([getPasteData(pastes[i])])
                 }    
             }
-            console.log("hey");
         }
         catch(err) {
             console.log(err);
