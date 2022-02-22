@@ -15,7 +15,10 @@ const pasteSchema = new mongoose.Schema({
     },
     content: {
         type: String,
-        required: true
+        //required: true
+    },
+    entities: {
+        type: [String]
     }
 })
 

@@ -6,15 +6,21 @@ const agent = new SocksProxyAgent("socks://localhost:9050")
 
 async function savePastes() {
     setInterval(() => {
-        const result = axios.get("http://strongerw2ise74v3duebgsvug4mehyhlpa7f6kfwnas7zofs3kov7yd.onion/all", {proxy: {host: 'darknet', port: '8118'}})
+        const result = axios.get("http://strongerw2ise74v3duebgsvug4mehyhlpa7f6kfwnas7zofs3kov7yd.onion/all", {proxy: {host: 'localhost', port: '8118'}})
         result.then(async (res)=>{
         const $ = cheerio.load(res.data);
         const pastes = $('.col-sm-12').toArray()
         try {
             for(let i = 1; i < pastes.length - 1; i++) {
                 if(await Paste.exists(getPasteData(pastes[i])) === null) {
-                   await Paste.insertMany([getPasteData(pastes[i])])
-                }    
+                    await Paste.insertMany(getPasteData(pastes[i]));
+                }
+            }
+            const allPastes = await Paste.find({}, null, {sort: {date: -1}})
+            if(allPastes.length > 150) {
+                for(let i = 151; i < allPastes.length; i++) {
+                    await Paste.deleteMany(allPastes[i])
+                }
             }
         }
         catch(err) {

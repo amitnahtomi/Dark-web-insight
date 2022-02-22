@@ -6,15 +6,17 @@ import Filter from 'bad-words';
 import Sentiment from 'sentiment'
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import {DebounceInput} from 'react-debounce-input';
-import { Button, Card, TextField, Pagination } from '@mui/material';
+import { Button, Card, TextField, Pagination, Alert } from '@mui/material';
+import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 const filter = new Filter();
 const sentiment = new Sentiment()
 
 function App() {
   const [pastes, setPastes] = useState([])
   const [age, setAge] = useState(0)
-  const [searchText, setSearchText] = useState(false)
+  const [searchText, setSearchText] = useState("")
   const [page, setPage] = useState(1);
+  const [alerts, setAlerts] = useState(0)
   const inputAge = useRef(null)
   
   const viewContent = (e) => {
@@ -38,7 +40,14 @@ function App() {
       setAge(sessionStorage.getItem("userAge"))
     }
     const getPastes = async () => {
+      let foundedAlerts = 0
       const res = await axios.get('http://localhost:8080/')
+      for(let i = 0; i < res.data.length; i++){
+        if(sentiment.analyze(res.data[i].content).score < 0) {
+          foundedAlerts++;
+        }
+      }
+      setAlerts(foundedAlerts)
       setPastes(res.data)
     }
     getPastes();
@@ -64,27 +73,36 @@ function App() {
     }/>
     <Route path={'/forom'} element={
       <div style={{paddingBottom: '30px', textAlign: "center"}}>
+        <Alert style={{width: "25%", marginButtom: "5px"}} variant="outlined" severity="warning">There are {alerts} suspicious pastes</Alert>
       <DebounceInput style={{height: "40px", width: "250px", fontSize: "25px", borderColor: "blue", borderRadius: "4px"}} id='filter-input' placeholder="enter text filtering" debounceTimeout={1000} onChange={(e)=>{setSearchText(e.target.value)}} />
       <ul>
-        {pastes.slice((page-1) * 15, (page * 15 - 1)).map((p)=>{
+        {pastes.slice((page-1) * 15, (page * 15)).map((p)=>{
           if(age >= 18) {
             return <li><Card variant="outlined" style={{borderColor: "violet", padding: "8px", backgroundColor: "lightgoldenrodyellow", textAlign: "left"}}>
-            <div>{p.title}</div>
+            <div style={{textAlign: "right", float: "right", width: "50%"}} hidden={sentiment.analyze(p.content).score >= 0}><WarningAmberRoundedIcon fontSize="large" /></div>
+            <div style={{width: "50%"}}>{p.title}</div>
             <div>by {p.author}</div>
             <div>at {moment(p.date).format('LLLL')}</div>
             <div>sentiment value: {sentiment.analyze(p.content).score}</div>
             <Button size="small" variant="outlined" onClick={viewContent}>open</Button>
             <div hidden>{p.content}</div>
+            <div style={{textAlign: "right"}}>{p.entities.map((ent)=>{
+              return <span className="labels" onClick={(e)=>{setSearchText(e.target.innerText)}}>{ent}</span>
+            })}</div>
             </Card></li>
           }
           else {
-            return <li><Card variant="outlined" style={{borderColor: "violet", padding: "8px", backgroundColor: "lightgoldenrodyellow"}}>
-              <div>{filter.clean(p.title)}</div>
+            return <li><Card variant="outlined" style={{borderColor: "violet", padding: "8px", backgroundColor: "lightgoldenrodyellow", textAlign: "left"}}>
+              <div style={{textAlign: "right", float: "right", width: "50%"}} hidden={sentiment.analyze(p.content).score >= 0}><WarningAmberRoundedIcon fontSize="large" /></div>
+              <div style={{width: "50%"}}>{filter.clean(p.title)}</div>
               <div>by {p.author}</div>
               <div>at {moment(p.date).format('LLLL')}</div>
               <div>sentiment value: {sentiment.analyze(p.content).score}</div>
               <Button size="small" variant="outlined" onClick={viewContent}>open</Button>
               <div hidden>{filter.clean(p.content)}</div>
+              <div style={{textAlign: "right"}}>{p.entities.map((ent)=>{
+              return <span className="labels" onClick={(e)=>{setSearchText(e.target.innerText)}}>{filter.clean(ent)}</span>
+              })}</div>
               </Card></li>
           }
         })}

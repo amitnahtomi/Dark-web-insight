@@ -12,6 +12,16 @@ ul {
     bottom: 0;
 }
 
+.labels {
+  background-color: PowderBlue;
+  color: LightSlateGray;
+  border: 1px;
+  border-radius: 6px;
+  margin-right: 1%;
+  cursor: pointer;
+  font-size: large;
+}
+
 ::-webkit-scrollbar {
     width: 20px;
   }
