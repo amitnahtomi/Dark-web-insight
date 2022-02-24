@@ -79,7 +79,7 @@ function App() {
         {pastes.slice((page-1) * 15, (page * 15)).map((p)=>{
           if(age >= 18) {
             return <li><Card variant="outlined" style={{borderColor: "violet", padding: "8px", backgroundColor: "lightgoldenrodyellow", textAlign: "left"}}>
-            <div style={{textAlign: "right", float: "right", width: "50%"}} hidden={sentiment.analyze(p.content).score >= 0}><WarningAmberRoundedIcon fontSize="large" /></div>
+            <div style={{textAlign: "right", float: "right", width: "50%"}} hidden={sentiment.analyze(p.content).score >= 0}><WarningAmberRoundedIcon fontSize="large" style={{height: "13%", width: "13%"}} /></div>
             <div style={{width: "50%"}}>{p.title}</div>
             <div>by {p.author}</div>
             <div>at {moment(p.date).format('LLLL')}</div>
@@ -93,7 +93,7 @@ function App() {
           }
           else {
             return <li><Card variant="outlined" style={{borderColor: "violet", padding: "8px", backgroundColor: "lightgoldenrodyellow", textAlign: "left"}}>
-              <div style={{textAlign: "right", float: "right", width: "50%"}} hidden={sentiment.analyze(p.content).score >= 0}><WarningAmberRoundedIcon fontSize="large" /></div>
+              <div style={{textAlign: "right", float: "right", width: "50%"}} hidden={sentiment.analyze(p.content).score >= 0}><WarningAmberRoundedIcon fontSize="large" style={{height: "13%", width: "13%"}} /></div>
               <div style={{width: "50%"}}>{filter.clean(p.title)}</div>
               <div>by {p.author}</div>
               <div>at {moment(p.date).format('LLLL')}</div>

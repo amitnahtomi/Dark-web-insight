@@ -1,3 +1,7 @@
+body {
+  font-family: Roboto, Arimo, Arial, sans-serif;
+}
+
 li {
     margin-top: 10px;
 }
@@ -20,6 +24,8 @@ ul {
   margin-right: 1%;
   cursor: pointer;
   font-size: large;
+  padding: 3px;
+  border: 1px solid black;
 }
 
 ::-webkit-scrollbar {
