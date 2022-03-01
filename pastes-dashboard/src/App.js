@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import {DebounceInput} from 'react-debounce-input';
 import { Button, TextField, Pagination, Alert } from '@mui/material';
 import Paste from "./paste";
+import Charts from "./charts";
 const sentiment = new Sentiment()
 
 function App() {
@@ -51,9 +52,10 @@ function App() {
         <TextField placeholder="Your age" style={{width: "110px"}} inputRef={inputAge} type={"number"} variant={"outlined"} required></TextField>
       </div>
     }/>
+    <Route path="/stats" element={<Charts pastes={pastes} />} />
     <Route path={'/forom'} element={
       <div style={{paddingBottom: '30px', textAlign: "center"}}>
-        <Alert style={{width: "25%", marginButtom: "5px"}} variant="outlined" severity="warning">There are {alerts} suspicious pastes</Alert>
+        <Alert style={{width: "25%", marginButtom: "5px", textAlign: "left"}} variant="outlined" severity="warning">There are {alerts} suspicious pastes. <Link to={'/stats'}>Click here</Link> to see all stats.</Alert>
       <DebounceInput style={{height: "40px", width: "250px", fontSize: "25px", borderColor: "blue", borderRadius: "4px"}} id='filter-input' placeholder="enter text filtering" debounceTimeout={1000} onChange={(e)=>{setSearchText(e.target.value)}} />
       <ul>
         {pastes.slice((page-1) * 15, (page * 15)).map((p)=>{
